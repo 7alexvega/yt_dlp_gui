@@ -1,13 +1,18 @@
 from PyQt6.QtCore import Qt
 from PyQt6 import QtCore, QtWidgets
 from PyQt6.QtWidgets import QApplication, QStyle, QSizePolicy, QTableView
+from app.settings_manager import SettingsManager
 
 
 class UIMainWindow(object):
     def setup_ui(self, MainWindow):
+        # Settings Manager
+        self.settings_manager = SettingsManager()
+
         # App Name and Size
         MainWindow.setWindowTitle('yt_dlp gui')
-        MainWindow.resize(1000, 600)
+        length, height = self.settings_manager.get_setting('window_size')
+        MainWindow.resize(length, height)
 
         # Main layout for the central widget
         self.central_widget = QtWidgets.QWidget(parent=MainWindow)
@@ -20,6 +25,9 @@ class UIMainWindow(object):
         self.layout_download_format = QtWidgets.QVBoxLayout()
         self.label_download_format = QtWidgets.QLabel('Default Format:')
         self.combo_box_download_formats = QtWidgets.QComboBox()
+        self.downlaod_formats = self.settings_manager.get_setting('download_formats')
+        self.combo_box_download_formats.addItems(self.downlaod_formats['audio'] + self.downlaod_formats['video'])
+        self.combo_box_download_formats.setCurrentIndex(self.combo_box_download_formats.findText(self.settings_manager.get_setting('default_download_format')))
         self.layout_download_format.addWidget(self.label_download_format)
         self.layout_download_format.addWidget(self.combo_box_download_formats)
 
@@ -35,11 +43,13 @@ class UIMainWindow(object):
         self.label_save_directory = QtWidgets.QLabel('Save Directory:')
         self.radio_button_open_save_directory_on_close = QtWidgets.QRadioButton('Open On Close')
         self.radio_button_open_save_directory_on_close.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.radio_button_open_save_directory_on_close.setChecked(self.settings_manager.get_setting('open_save_directory_on_close'))
         self.layout_save_directory_header.addWidget(self.button_directory_selector)
         self.layout_save_directory_header.addWidget(self.label_save_directory)
         self.layout_save_directory_header.addWidget(self.radio_button_open_save_directory_on_close)
         self.line_edit_save_directory_display = QtWidgets.QLineEdit()
         self.line_edit_save_directory_display.setReadOnly(True)
+        self.line_edit_save_directory_display.setPlaceholderText(self.settings_manager.get_setting('save_directory'))
         self.layout_save_directory.addLayout(self.layout_save_directory_header)
         self.layout_save_directory.addWidget(self.line_edit_save_directory_display)
 
@@ -112,3 +122,10 @@ class UIMainWindow(object):
             'Open the save directory of downloaded videos on app closure')
         self.button_add_video.setToolTip('Add video to download, provided a url, save name, and format')
         self.button_remove_videos.setToolTip('Remove currently selected videos')
+
+    # Save App Settings
+    def persist_app_settings(self):
+        self.settings_manager.set_setting(key='window_size', value=(self.width(), self.height()))
+
+    def closeEvent(self, event):
+        self.persist_app_settings()
