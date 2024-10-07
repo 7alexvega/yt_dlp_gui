@@ -36,7 +36,9 @@ class SettingsManager:
         }
         self.verify_save_directory()
 
-    def get_setting(self, key: str):
+    def get_setting(self, key: str, value_type=None):
+        if value_type:
+            return self.__settings.value(key, self.__default_settings[key], type=value_type)
         return self.__settings.value(key, self.__default_settings[key])
 
     def set_setting(self, key: str, value):
