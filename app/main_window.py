@@ -5,6 +5,9 @@ from PyQt6 import QtCore, QtWidgets
 from PyQt6.QtWidgets import QApplication, QStyle, QSizePolicy, QTableView
 from app.settings_manager import SettingsManager
 from app.components.save_directory.save_directory_controller import SaveDirectoryController
+from app.util.loading_overlay import LoadingOverlay
+from app.components.video_table.video_table_model import VideoTableModel
+from app.components.video_table.video_table_controller import VideoTableController
 
 
 class UIMainWindow(object):
@@ -104,7 +107,11 @@ class UIMainWindow(object):
         self.main_layout.addLayout(self.layout_download_status_section)
 
         # Components
+        self.loading_overlay = LoadingOverlay(window=self)
         self.save_directory_controller = SaveDirectoryController(window=self)
+        self.video_table_model = VideoTableModel(data=[], headers=['URL','Title', 'Channel', 'Save Name', 'Length', 'Format','Status'])
+        self.table_view_video_details.setModel(self.video_table_model)
+        self.video_table_controller = VideoTableController(window=self)
 
         # Signals and Slots Connections
         self.connect_signals_slots()
@@ -118,7 +125,10 @@ class UIMainWindow(object):
 
     # Signals and Slots
     def connect_signals_slots(self):
+        self.video_table_controller.video_buttons_state()
+        self.video_table_controller.setup_table_headers_layout(table_view=self.table_view_video_details)
         self.button_directory_selector.clicked.connect(self.save_directory_controller.save_directory_dialog)
+        self.button_add_video.clicked.connect(self.video_table_controller.open_add_video_dialog)
 
     # Tool Tips
     def set_tool_tips(self):
