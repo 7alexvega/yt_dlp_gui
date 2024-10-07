@@ -43,13 +43,13 @@ class UIMainWindow(object):
         self.label_save_directory = QtWidgets.QLabel('Save Directory:')
         self.radio_button_open_save_directory_on_close = QtWidgets.QRadioButton('Open On Close')
         self.radio_button_open_save_directory_on_close.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        self.radio_button_open_save_directory_on_close.setChecked(self.settings_manager.get_setting('open_save_directory_on_close'))
+        self.radio_button_open_save_directory_on_close.setChecked(self.settings_manager.get_setting('open_save_directory_on_close', bool))
         self.layout_save_directory_header.addWidget(self.button_directory_selector)
         self.layout_save_directory_header.addWidget(self.label_save_directory)
         self.layout_save_directory_header.addWidget(self.radio_button_open_save_directory_on_close)
         self.line_edit_save_directory_display = QtWidgets.QLineEdit()
         self.line_edit_save_directory_display.setReadOnly(True)
-        self.line_edit_save_directory_display.setPlaceholderText(self.settings_manager.get_setting('save_directory'))
+        self.line_edit_save_directory_display.setText(self.settings_manager.get_setting('save_directory'))
         self.layout_save_directory.addLayout(self.layout_save_directory_header)
         self.layout_save_directory.addWidget(self.line_edit_save_directory_display)
 
@@ -126,6 +126,9 @@ class UIMainWindow(object):
     # Save App Settings
     def persist_app_settings(self):
         self.settings_manager.set_setting(key='window_size', value=(self.width(), self.height()))
+        self.settings_manager.set_setting(key='default_download_format', value=self.combo_box_download_formats.currentText())
+        self.settings_manager.set_setting(key='save_directory', value=self.line_edit_save_directory_display.text())
+        self.settings_manager.set_setting(key='open_save_directory_on_close', value=self.radio_button_open_save_directory_on_close.isChecked())
 
     def closeEvent(self, event):
         self.persist_app_settings()
