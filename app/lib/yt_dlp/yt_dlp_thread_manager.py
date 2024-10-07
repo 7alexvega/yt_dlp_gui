@@ -8,9 +8,9 @@ class YTDLPThreadManager:
     def __init__(self):
         self.__yt_dlp_worker = YTDLPWorker()
         self.__thread_pool = QThreadPool()
-        self.__download_progress = self.__yt_dlp_worker.download_progress
-        self.__video_download_response = self.__yt_dlp_worker.video_download_response
-        self.__video_details_response = self.__yt_dlp_worker.video_details_response
+        self.download_progress = self.__yt_dlp_worker.download_progress
+        self.video_download_response = self.__yt_dlp_worker.video_download_response
+        self.video_details_response = self.__yt_dlp_worker.video_details_response
 
     def start_download_thread(self, youtube_url: str, save_name: str, download_format: str, save_path: str, video_index: int):
         self.__thread_pool.start(YTDLPDownloadTask(self.__yt_dlp_worker,
