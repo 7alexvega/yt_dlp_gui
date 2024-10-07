@@ -16,4 +16,4 @@ class SaveDirectoryController:
                                                     QFileDialog.Option.DontResolveSymlinks)
         if save_dir:
             save_dir = os.path.normpath(save_dir)
-            self.__line_edit_save_directory_display.setPlaceholderText(save_dir)
+            self.__line_edit_save_directory_display.setText(save_dir)
