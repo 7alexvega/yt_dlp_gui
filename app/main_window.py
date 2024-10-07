@@ -129,6 +129,7 @@ class UIMainWindow(object):
         self.video_table_controller.setup_table_headers_layout(table_view=self.table_view_video_details)
         self.button_directory_selector.clicked.connect(self.save_directory_controller.save_directory_dialog)
         self.button_add_video.clicked.connect(self.video_table_controller.open_add_video_dialog)
+        self.button_remove_videos.clicked.connect(self.video_table_controller.remove_selected_video_entries)
 
     # Tool Tips
     def set_tool_tips(self):
