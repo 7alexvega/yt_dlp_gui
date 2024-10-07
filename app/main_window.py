@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt
 from PyQt6 import QtCore, QtWidgets
 from PyQt6.QtWidgets import QApplication, QStyle, QSizePolicy, QTableView
 from app.settings_manager import SettingsManager
+from app.components.save_directory.save_directory_controller import SaveDirectoryController
 
 
 class UIMainWindow(object):
@@ -102,6 +103,9 @@ class UIMainWindow(object):
         self.main_layout.addLayout(self.layout_video_section)
         self.main_layout.addLayout(self.layout_download_status_section)
 
+        # Components
+        self.save_directory_controller = SaveDirectoryController(window=self)
+
         # Signals and Slots Connections
         self.connect_signals_slots()
 
@@ -114,7 +118,7 @@ class UIMainWindow(object):
 
     # Signals and Slots
     def connect_signals_slots(self):
-        pass
+        self.button_directory_selector.clicked.connect(self.save_directory_controller.save_directory_dialog)
 
     # Tool Tips
     def set_tool_tips(self):
