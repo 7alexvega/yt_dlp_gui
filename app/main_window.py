@@ -130,6 +130,8 @@ class UIMainWindow(object):
         self.button_directory_selector.clicked.connect(self.save_directory_controller.save_directory_dialog)
         self.button_add_video.clicked.connect(self.video_table_controller.open_add_video_dialog)
         self.button_remove_videos.clicked.connect(self.video_table_controller.remove_selected_video_entries)
+        self.button_download_videos.clicked.connect(self.video_table_controller.download_videos)
+        self.button_clear_downloads.clicked.connect(self.video_table_controller.table_cleared)
 
     # Tool Tips
     def set_tool_tips(self):
