@@ -14,4 +14,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle(QStyleFactory.create('Fusion'))
     window = MainWindow()
+    app.aboutToQuit.connect(window.open_save_directory_on_app_close)
     app.exec()

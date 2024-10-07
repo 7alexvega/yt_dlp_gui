@@ -1,3 +1,5 @@
+import os
+
 from PyQt6.QtCore import Qt
 from PyQt6 import QtCore, QtWidgets
 from PyQt6.QtWidgets import QApplication, QStyle, QSizePolicy, QTableView
@@ -129,6 +131,11 @@ class UIMainWindow(object):
         self.settings_manager.set_setting(key='default_download_format', value=self.combo_box_download_formats.currentText())
         self.settings_manager.set_setting(key='save_directory', value=self.line_edit_save_directory_display.text())
         self.settings_manager.set_setting(key='open_save_directory_on_close', value=self.radio_button_open_save_directory_on_close.isChecked())
+
+    # App Exit
+    def open_save_directory_on_app_close(self):
+        if self.radio_button_open_save_directory_on_close.isChecked():
+            os.startfile(self.line_edit_save_directory_display.text())
 
     def closeEvent(self, event):
         self.persist_app_settings()
