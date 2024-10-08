@@ -20,47 +20,51 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile "ffmpeg-release-essentials.zip"
           Expand-Archive "ffmpeg-release-essentials.zip"
-          Get-ChildItem -Path ffmpeg-release-essentials -Recurse
+          $ffmpegDir = Get-ChildItem -Path "./ffmpeg-release-essentials" -Directory | Where-Object { $_.Name -match "ffmpeg-.*-essentials_build" }
+          $ffmpegBinDir = Join-Path $ffmpegDir.FullName "bin"
+          echo "ffmpeg bin dir: $ffmpegBinDir"
 
-#      - name: build exe
-#        shell: powershell
-#        run: |
-#          pip install pip -U
-#          pip install -r requirements.txt
-#          pyinstaller --onefile `
-#          --add-binary "$ffmpegDir\ffmpeg.exe;," `
-#          --add-binary "$ffmpegDir\ffprobe.exe;," `
-#          --add-binary "$ffmpegDir\ffplay.exe;," `
-#          --windowed --name yt_dlp_gui main.py
-#
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: yt_dlp_gui.exe
-#          path: .\dist\yt_dlp_gui.exe
-#
-#  publish:
-#    runs-on: ubuntu-latest
-#    needs: build_exe
-#    permissions:
-#      contents: write
-#    steps:
-#      - name: Download exe
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: yt_dlp_gui.exe
-#          path: /tmp
-#
-#      - name: Generate Prerelease Release Notes
-#        run: |
-#          zip /tmp/yt_dlp_gui_windows.zip /tmp/yt_dlp_gui.exe && rm /tmp/yt_dlp_gui.exe || ls /tmp
-#          echo '### yt_dlp_gui `latest`' >> ReleaseNotes.md
-#
-#      - name: Publish GitHub Release
-#        uses: ncipollo/release-action@v1
-#        with:
-#          bodyFile: "ReleaseNotes.md"
-#          artifacts: /tmp/yt_dlp_gui*.*
-#          tag: "v1.0.1"
-#          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: build exe
+        shell: powershell
+        run: |
+          pip install pip -U
+          pip install -r requirements.txt
+          pyinstaller --onefile `
+          --add-binary "$ffmpegBinDir\ffmpeg.exe;," `
+          --add-binary "$ffmpegBinDir\ffprobe.exe;," `
+          --add-binary "$ffmpegBinDir\ffplay.exe;," `
+          --windowed --name yt_dlp_gui main.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: yt_dlp_gui.exe
+          path: .\dist\yt_dlp_gui.exe
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build_exe
+    permissions:
+      contents: write
+    env:
+      DIR_NAME: /yt_dlp_gui_1.0.1
+    steps:
+      - name: Download exe
+        uses: actions/download-artifact@v3
+        with:
+          name: yt_dlp_gui.exe
+          path: ${{ env.DIR_NAME }}
+
+      - name: Generate Prerelease Release Notes
+        run: |
+          zip ${{ env.DIR_NAME }}/yt_dlp_gui_windows.zip ${{ env.DIR_NAME }}/yt_dlp_gui.exe && rm ${{ env.DIR_NAME }}/yt_dlp_gui.exe || ls ${{ env.DIR_NAME }}
+          echo '### yt_dlp_gui `latest`' >> ReleaseNotes.md
+
+      - name: Publish GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          bodyFile: "ReleaseNotes.md"
+          artifacts: ${{ env.DIR_NAME }}/yt_dlp_gui*.*
+          tag: "v1.0.1"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
