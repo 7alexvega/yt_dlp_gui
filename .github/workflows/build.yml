@@ -31,6 +31,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: build_exe
+    permissions:
+      contents: write
     steps:
       - name: Download exe
         uses: actions/download-artifact@v3
