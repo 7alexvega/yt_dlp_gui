@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import yt_dlp
 from datetime import timedelta
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -15,7 +16,10 @@ class YTDLPWorker(QObject):
         super().__init__()
         self.__settings_manager = SettingsManager()
         self.__download_formats = self.__settings_manager.get_setting('download_formats')
-        self.__ffmpeg_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'ffmpeg.exe')
+
+        # ffmpeg path in pyinstaller build
+        self.__bundle_path = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__)))
+        self.__ffmpeg_path = os.path.join(self.__bundle_path, 'ffmpeg.exe')
 
     def get_video_details(self, youtube_url: str, save_name: str, download_format: str):
         yt_dlp_options = {

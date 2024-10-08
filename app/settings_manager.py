@@ -1,4 +1,5 @@
 import os
+import sys
 from PyQt6.QtCore import QSettings
 
 
@@ -13,7 +14,9 @@ class SettingsManager:
 
     def __init__(self):
         self.__settings = QSettings('yt_dlp_guiv1.0.1', 'yt_dlp_gui')
-        self.__app_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        # directory path of the pyinstaller exe
+        self.__app_directory = os.path.dirname(sys.executable)
         self.__default_settings = {
             'window_size': (1000, 600),
             'download_formats': {
