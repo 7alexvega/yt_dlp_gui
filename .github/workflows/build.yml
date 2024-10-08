@@ -65,7 +65,7 @@ jobs:
 
       - name: Generate Prerelease Release Notes
         run: |
-          zip -r "$APP_NAME_$VERSION.zip" -j $TMP_DIR. && rm $TMP_DIR
+          zip -r "$APP_NAME_$VERSION.zip" -j $TMP_DIR/$APP_NAME. && rm $TMP_DIR
           echo '### $APP_NAME `latest`' >> ReleaseNotes.md
 
       - name: Publish GitHub Release
