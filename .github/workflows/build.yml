@@ -15,7 +15,18 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: install ffmpeg
+      - name: cache ffmpeg
+        id: cache-ffmpeg
+        uses: actions/cache@v3
+        with:
+          path: ffmpeg-release-essentials
+          key: ${{ runner.os }}-ffmpeg{{ hashFiles('**/workflow-ffmpeg.txt') }}
+
+      - name: store ffmpeg version
+        run: echo "ffmpeg-version-1" > workflow-ffmpeg.txt
+
+      - name: install ffmpeg if not cached
+        if: steps.cache-ffmpeg.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           Invoke-WebRequest -Uri "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile "ffmpeg-release-essentials.zip"
@@ -51,28 +62,28 @@ jobs:
     env:
       VERSION: 1.0.1
       APP_NAME: yt_dlp_gui
-      TMP_DIR: "${{ github.workspace }}/$APP_NAME_$VERSION/"
+      TMP_DIR: "${{ github.workspace }}/${{ env.APP_NAME }}_${{ env.VERSION }}/"
     steps:
       - name: Create temp dir
         run: |
-          mkdir -p $TMP_DIR/$APP_NAME
+          mkdir -p "${{ env.TMP_DIR }}/${{ env.APP_NAME }}"
 
       - name: Download exe
         uses: actions/download-artifact@v3
         with:
           name: yt_dlp_gui.exe
-          path: $TMP_DIR/$APP_NAME
+          path: "${{ env.TMP_DIR }}/${{ env.APP_NAME }}"
 
       - name: Generate Prerelease Release Notes
         run: |
-          zip -r "$APP_NAME_$VERSION.zip" -j $TMP_DIR/$APP_NAME. && rm $TMP_DIR
-          echo '### $APP_NAME `latest`' >> ReleaseNotes.md
+          zip -r "${{ env.APP_NAME }}_${{ env.VERSION }}" -j "${{ env.TMP_DIR }}/${{ env.APP_NAME }}". && rm "${{ env.TMP_DIR }}"
+          echo '### ${{ env.APP_NAME }} `latest`' >> ReleaseNotes.md
 
       - name: Publish GitHub Release
         uses: ncipollo/release-action@v1
         with:
           bodyFile: "ReleaseNotes.md"
-          artifacts: "$APP_NAME_$VERSION.zip"
-          tag: "v$VERSION"
+          artifacts: "${{ env.APP_NAME }}_${{ env.VERSION }}.zip"
+          tag: "v${{ env.VERSION }}"
           token: ${{ secrets.GITHUB_TOKEN }}
 
