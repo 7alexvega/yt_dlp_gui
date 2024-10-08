@@ -20,8 +20,9 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile "ffmpeg-release-essentials.zip"
           Expand-Archive "ffmpeg-release-essentials.zip"
-          
-          
+          $ffmpegPath = (Get-Command ffmpeg).Path
+          $ffmpegDir = Split-Path -Parent $ffmpegPath
+          echo "ffmpeg dir: $ffmpegDir"
 
       - name: build exe
         shell: powershell
@@ -29,9 +30,9 @@ jobs:
           pip install pip -U
           pip install -r requirements.txt
           pyinstaller --onefile `
-          --add-binary "ffmpeg-release-essentials\bin\ffmpeg.exe;," `
-          --add-binary "ffmpeg-release-essentials\bin\ffprobe.exe;," `
-          --add-binary "ffmpeg-release-essentials\bin\ffplay.exe;," `
+          --add-binary "$ffmpegDir\ffmpeg.exe;," `
+          --add-binary "$ffmpegDir\ffprobe.exe;," `
+          --add-binary "$ffmpegDir\ffplay.exe;," `
           --windowed --name yt_dlp_gui main.py
 
       - name: Upload artifact
@@ -56,7 +57,6 @@ jobs:
         run: |
           zip /tmp/yt_dlp_gui_windows.zip /tmp/yt_dlp_gui.exe && rm /tmp/yt_dlp_gui.exe || ls /tmp
           echo '### yt_dlp_gui `latest`' >> ReleaseNotes.md
-          
 
       - name: Publish GitHub Release
         uses: ncipollo/release-action@v1
