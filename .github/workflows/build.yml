@@ -51,28 +51,28 @@ jobs:
     env:
       VERSION: 1.0.1
       APP_NAME: yt_dlp_gui
-      TMP_DIR: "${{ github.workspace }}/${{ env.APP_NAME }}_${{ env.VERSION }}/"
+      TMP_DIR: "${{ github.workspace }}/$APP_NAME_$VERSION/"
     steps:
       - name: Create temp dir
         run: |
-          mkdir -p ${{ env.TMP_DIR }}/${{ env.APP_NAME }}
+          mkdir -p $TMP_DIR/$APP_NAME
 
       - name: Download exe
         uses: actions/download-artifact@v3
         with:
           name: yt_dlp_gui.exe
-          path: ${{ env.TMP_DIR }}/${{ env.APP_NAME }}
+          path: $TMP_DIR/$APP_NAME
 
       - name: Generate Prerelease Release Notes
         run: |
-          zip -r "${{ env.APP_NAME }}_${{ env.VERSION }}.zip" -j ${{ env.TMP_DIR }}. && rm ${{ env.TMP_DIR }}
-          echo '### ${{ env.APP_NAME }} `latest`' >> ReleaseNotes.md
+          zip -r "$APP_NAME_$VERSION.zip" -j $TMP_DIR. && rm $TMP_DIR
+          echo '### $APP_NAME `latest`' >> ReleaseNotes.md
 
       - name: Publish GitHub Release
         uses: ncipollo/release-action@v1
         with:
           bodyFile: "ReleaseNotes.md"
-          artifacts: ${{ env.TMP_DIR }}.zip
-          tag: "v${{ env.VERSION }}"
+          artifacts: "$APP_NAME_$VERSION.zip"
+          tag: "v$VERSION"
           token: ${{ secrets.GITHUB_TOKEN }}
 
