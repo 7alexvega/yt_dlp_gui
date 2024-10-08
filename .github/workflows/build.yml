@@ -20,15 +20,17 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile "ffmpeg-release-essentials.zip"
           Expand-Archive "ffmpeg-release-essentials.zip"
-          $ffmpegDir = Get-ChildItem -Path "./ffmpeg-release-essentials" -Directory | Where-Object { $_.Name -match "ffmpeg-.*-essentials_build" }
-          $ffmpegBinDir = Join-Path $ffmpegDir.FullName "bin"
-          echo "ffmpeg bin dir: $ffmpegBinDir"
 
       - name: build exe
         shell: powershell
         run: |
           pip install pip -U
           pip install -r requirements.txt
+          
+          $ffmpegDir = Get-ChildItem -Path "./ffmpeg-release-essentials" -Directory | Where-Object { $_.Name -match "ffmpeg-.*-essentials_build" }
+          $ffmpegBinDir = Join-Path $ffmpegDir.FullName "bin"
+          echo "ffmpeg bin dir: $ffmpegBinDir"
+          
           pyinstaller --onefile `
           --add-binary "$ffmpegBinDir\ffmpeg.exe;," `
           --add-binary "$ffmpegBinDir\ffprobe.exe;," `
