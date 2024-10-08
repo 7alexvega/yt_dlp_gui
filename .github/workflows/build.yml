@@ -64,6 +64,6 @@ jobs:
         with:
           bodyFile: "ReleaseNotes.md"
           artifacts: /tmp/yt_dlp_gui*.*
-          tag: "v1.0.0"
+          tag: "v1.0.1"
           token: ${{ secrets.GITHUB_TOKEN }}
 
