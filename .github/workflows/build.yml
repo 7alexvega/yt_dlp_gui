@@ -18,8 +18,8 @@ jobs:
       - name: install ffmpeg
         shell: powershell
         run: |
-          Invoke-WebRequest -Uri https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile "ffmpeg-release-essentials.zip"
-          Expand-Archive ffmpeg-release-essentials.zip
+          Invoke-WebRequest -Uri "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile "ffmpeg-release-essentials.zip"
+          Expand-Archive "ffmpeg-release-essentials.zip"
           
           
 
