@@ -18,14 +18,9 @@ jobs:
       - name: install ffmpeg
         shell: powershell
         run: |
-          winget install "FFmpeg (Essentials Build)"
-          $ffmpegPath = (Get-Command ffmpeg).Path
-          $ffmpegDir = Split-Path -Parent $ffmpegPath
+          Invoke-WebRequest -Uri https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile "ffmpeg-release-essentials.zip"
+          Expand-Archive ffmpeg-release-essentials.zip
           
-          mkdir ffmpeg_binaries
-          Copy-Item "$ffmpegDir\ffmpeg.exe" "ffmpeg_binaries/"
-          Copy-Item "$ffmpegDir\ffprobe.exe" "ffmpeg_binaries/"
-          Copy-Item "$ffmpegDir\ffplay.exe" "ffmpeg_binaries/"
           
 
       - name: build exe
@@ -33,7 +28,11 @@ jobs:
         run: |
           pip install pip -U
           pip install -r requirements.txt
-          pyinstaller --onefile --add-binary "ffmpeg_binaries/ffmpeg.exe;," --add-binary "ffmpeg_binaries/ffprobe.exe;," --add-binary "ffmpeg_binaries/ffplay.exe;," --windowed --name yt_dlp_gui main.py
+          pyinstaller --onefile `
+          --add-binary "ffmpeg-release-essentials\bin\ffmpeg.exe;," `
+          --add-binary "ffmpeg-release-essentials\bin\ffprobe.exe;," `
+          --add-binary "ffmpeg-release-essentials\bin\ffplay.exe;," `
+          --windowed --name yt_dlp_gui main.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
