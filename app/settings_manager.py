@@ -12,7 +12,7 @@ class SettingsManager:
         return cls.__instance
 
     def __init__(self):
-        self.__settings = QSettings('yt_dlp_gui', 'yt_dlp_gui')
+        self.__settings = QSettings('yt_dlp_guiv1.0.1', 'yt_dlp_gui')
         self.__app_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.__default_settings = {
             'window_size': (1000, 600),
