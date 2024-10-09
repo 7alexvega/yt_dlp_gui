@@ -19,7 +19,7 @@ class YTDLPWorker(QObject):
 
         # ffmpeg path in pyinstaller build
         self.__bundle_path = sys._MEIPASS
-        self.__ffmpeg_path = os.path.join(self.__bundle_path, 'ffmpeg.exe')
+        self.__ffmpeg_path = os.path.join(self.__bundle_path, 'ffmpeg', 'ffmpeg.exe')
 
     def get_video_details(self, youtube_url: str, save_name: str, download_format: str):
         yt_dlp_options = {

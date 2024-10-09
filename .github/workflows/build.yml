@@ -43,9 +43,9 @@ jobs:
           echo "ffmpeg bin dir: $ffmpegBinDir"
           
           pyinstaller --onefile `
-          --add-binary "$ffmpegBinDir\ffmpeg.exe;," `
-          --add-binary "$ffmpegBinDir\ffprobe.exe;," `
-          --add-binary "$ffmpegBinDir\ffplay.exe;," `
+          --add-binary "$ffmpegBinDir\ffmpeg.exe;ffmpeg" `
+          --add-binary "$ffmpegBinDir\ffprobe.exe;ffmpeg" `
+          --add-binary "$ffmpegBinDir\ffplay.exe;ffmpeg" `
           --windowed --name yt_dlp_gui main.py
 
       - name: Upload artifact
