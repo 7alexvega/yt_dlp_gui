@@ -73,10 +73,10 @@ jobs:
           name: yt_dlp_gui.exe
           path: "${{ github.workspace }}/${{ env.APP_NAME }}_${{ env.VERSION }}/${{ env.APP_NAME }}"
 
-      - name: Generate Prerelease Release Notes
+      - name: Generate Prerelease Release Notes and Create Zip
         run: |
           cd "${{ github.workspace }}"
-          zip -r "${{ env.APP_NAME }}_${{ env.VERSION }}" -j "${{ env.APP_NAME }}". && rm "./"
+          zip -r "${{ env.APP_NAME }}_${{ env.VERSION }}.zip" -j "${{ env.APP_NAME }}". && rm "./"
           echo '### ${{ env.APP_NAME }} `latest`' >> ReleaseNotes.md
 
       - name: Publish GitHub Release
