@@ -76,7 +76,7 @@ jobs:
       - name: Generate Prerelease Release Notes and Create Zip
         run: |
           cd "${{ github.workspace }}"
-          zip -r "${{ env.APP_NAME }}_${{ env.VERSION }}.zip" -j "${{ env.APP_NAME }}". && rm "./"
+          zip -r "${{ env.APP_NAME }}_${{ env.VERSION }}.zip" -j "./${{ env.APP_NAME }}_${{ env.VERSION }} && rm "./"
           echo '### ${{ env.APP_NAME }} `latest`' >> ReleaseNotes.md
 
       - name: Publish GitHub Release
