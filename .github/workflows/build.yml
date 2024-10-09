@@ -76,8 +76,9 @@ jobs:
       - name: Generate Prerelease Release Notes and Create Zip
         run: |
           cd "${{ github.workspace }}"
-          zip -r "${{ env.APP_NAME }}_${{ env.VERSION }}.zip" -j "./${{ env.APP_NAME }}_${{ env.VERSION }} && rm "./"
+          zip -r "${{ env.APP_NAME }}_${{ env.VERSION }}.zip" "${{ env.APP_NAME }}_${{ env.VERSION }}
           echo '### ${{ env.APP_NAME }} `latest`' >> ReleaseNotes.md
+          rm -rf "${{ env.APP_NAME }}_${{ env.VERSION }}"
 
       - name: Publish GitHub Release
         uses: ncipollo/release-action@v1
