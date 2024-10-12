@@ -61,12 +61,22 @@ class YTDLPWorker(QObject):
             'progress_hooks': [self.__download_progress_hook],
         }
 
+        # Video Formats
         if download_format in self.__download_formats['video']:
             if download_format == 'best video':
                 format_value = 'bestvideo+bestaudio/best'
             else:
                 format_value = f'bestvideo[ext={download_format}]+bestaudio[ext=m4a]/best[ext={download_format}]/best'
             yt_dlp_options['format'] = format_value
+
+        # Audio Formats
+        elif download_format == 'best audio':
+            yt_dlp_options['format'] = 'bestaudio/best'
+            yt_dlp_options['postprocessors'] = [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'best',
+            }]
+
         else:
             yt_dlp_options['format'] = 'bestaudio/best'
             yt_dlp_options['postprocessors'] = [{
