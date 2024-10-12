@@ -26,14 +26,15 @@ class SettingsManager:
                     'mp3',
                     'opus',
                     'vorbis',
-                    'wav'
+                    'wav',
+                    'best audio'
                 ],
                 'video': [
                     'mp4',
                     'best video'
                 ]
             },
-            'default_download_format': 'wav',
+            'default_download_format': 'best audio',
             'save_directory': os.path.join(self.__app_directory, 'downloads'),
             'open_save_directory_on_close': False
         }
